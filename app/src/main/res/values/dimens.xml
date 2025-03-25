@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Search Field -->
+    <dimen name="search_field_height">62dp</dimen>
+    <dimen name="search_icon_padding_horizontal">16dp</dimen>
+
+    <!-- TopAppBar -->
+    <dimen name="topAppBar_padding">16dp</dimen>
+
+    <!-- List Item -->
+    <dimen name="list_item_vertical_arrangement_space">8dp</dimen>
+    <dimen name="list_item_padding_inside">16dp</dimen>
+    <dimen name="list_item_horizontal_arrangement_space">16dp</dimen>
+
+    <!-- List Container -->
+    <dimen name="list_container_padding_start">16dp</dimen>
+    <dimen name="list_container_padding_top">16dp</dimen>
+    <dimen name="list_container_padding_end">16dp</dimen>
+    <dimen name="list_container_vertical_arrangement_space">12dp</dimen>
+
+</resources>
