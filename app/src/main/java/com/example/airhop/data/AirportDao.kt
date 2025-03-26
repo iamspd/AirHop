@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Data Object Access class for [Airport] table that contains all queries
- * to operate on the data
+ * to operate on the data.
  */
 @Dao
 interface AirportDao {
