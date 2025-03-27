@@ -23,5 +23,6 @@ data class Favorite(
     @ColumnInfo(name = "destination_code")
     val destinationCode: String = "YYZ",
     /** Name of destination airport. **/
+    @ColumnInfo(name = "destination_name")
     val destinationName: String = "Toronto Pearson"
 )
