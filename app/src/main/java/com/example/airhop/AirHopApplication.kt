@@ -7,7 +7,7 @@ import com.example.airhop.data.DefaultContainer
 /**
  * [AppContainer] instance used by the rest of the classes to obtain dependencies.
  */
-class AirHopApp : Application() {
+class AirHopApplication : Application() {
     private lateinit var appContainer: AppContainer
 
     override fun onCreate() {
