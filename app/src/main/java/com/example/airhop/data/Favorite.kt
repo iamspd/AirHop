@@ -15,8 +15,13 @@ data class Favorite(
     val id: Int = 0,
     /** Internation air transport association (IATA) code of departing airport. **/
     @ColumnInfo(name = "departure_code")
-    val departCode: String = "YYZ",
+    val departureCode: String = "YYZ",
+    /** Name of departure airport. **/
+    @ColumnInfo(name = "departure_name")
+    val departureName: String = "Toronto Pearson",
     /** IATA code of destination airport. **/
     @ColumnInfo(name = "destination_code")
-    val destinationCode: String = "YYZ"
+    val destinationCode: String = "YYZ",
+    /** Name of destination airport. **/
+    val destinationName: String = "Toronto Pearson"
 )
