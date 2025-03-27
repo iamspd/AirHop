@@ -8,4 +8,7 @@
     <string name="favorites_route_text">Favorite routes</string>
     <string name="favorite_icon">Favorite Icon</string>
 
+    <string name="depart">Depart</string>
+    <string name="arrive">Arrive</string>
+
 </resources>

@@ -11,10 +11,16 @@
     <!-- TopAppBar -->
     <dimen name="topAppBar_padding">16dp</dimen>
 
-    <!-- List Item -->
+    <!-- Favorite List Item -->
     <dimen name="list_item_vertical_arrangement_space">8dp</dimen>
+    <dimen name="list_item_card_text_vertical_arrangement_space">2dp</dimen>
     <dimen name="list_item_padding_inside">16dp</dimen>
-    <dimen name="list_item_horizontal_arrangement_space">16dp</dimen>
+    <dimen name="list_item_horizontal_arrangement_space">8dp</dimen>
+    <dimen name="list_item_card_elevation">2dp</dimen>
+    <dimen name="list_item_card_horizontal_padding">16dp</dimen>
+    <dimen name="list_item_card_vertical_padding">16dp</dimen>
+    <dimen name="list_item_card_border_stroke">1dp</dimen>
+    <dimen name="list_item_card_favorite_button_size">28dp</dimen>
 
     <!-- List Container -->
     <dimen name="list_container_padding_start">16dp</dimen>
