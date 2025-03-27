@@ -15,6 +15,11 @@ interface AirportDao {
      * The [Airport] details will be displayed based on given IATA code
      * OR the airport name.
      */
-    @Query("SELECT * FROM airport WHERE :searchString")
+    @Query(
+        """
+       SELECT * FROM airport WHERE name LIKE '%' || :searchString || '%' 
+OR iata_code LIKE '%' || :searchString || '%'
+    """
+    )
     fun getFlights(searchString: String): Flow<List<Airport>>
 }
