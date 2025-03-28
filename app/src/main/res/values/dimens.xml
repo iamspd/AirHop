@@ -25,6 +25,7 @@
 
     <!-- Main Screen -->
     <dimen name="main_container_padding">16dp</dimen>
-    <dimen name="main_container_vertical_arrangement_space">16dp</dimen>
+    <dimen name="main_container_title_text_padding_bottom">8dp</dimen>
+    <dimen name="main_container_vertical_arrangement_space">24dp</dimen>
 
 </resources>

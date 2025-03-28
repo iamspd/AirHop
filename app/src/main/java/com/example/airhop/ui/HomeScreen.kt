@@ -75,12 +75,18 @@ fun AirHopApp() {
                         end = dimensionResource(R.dimen.main_container_padding)
                     )
             )
-
-
-            FavoriteFlights(
-                modifier = Modifier.fillMaxWidth(),
-                favorites = favoriteUiState.favorites
-            )
+            if (searchQuery.isBlank()) {
+                FavoriteFlights(
+                    modifier = Modifier.fillMaxWidth(),
+                    favorites = favoriteUiState.favorites
+                )
+            } else {
+                FlightList(
+                    modifier = Modifier.fillMaxWidth(),
+                    airportName = searchQuery,
+                    flights = flights
+                )
+            }
         }
     }
 }

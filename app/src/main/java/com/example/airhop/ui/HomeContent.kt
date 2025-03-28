@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.twotone.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,13 +20,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.airhop.R
+import com.example.airhop.data.Airport
 import com.example.airhop.data.Favorite
+import com.example.airhop.data.Flight
 import com.example.airhop.ui.components.FlightListItem
 import com.example.airhop.ui.theme.AirHopTheme
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewFavoriteContent() {
+fun PreviewFavoriteFlights() {
     AirHopTheme {
         val favorites = List(9) {
             Favorite(
@@ -42,18 +45,78 @@ fun PreviewFavoriteContent() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewFlightList() {
+    AirHopTheme {
+
+        val flights = List(9) {
+            Flight(
+                departureAirport = Airport(id = it),
+                destinationAirport = Airport(id = it)
+            )
+        }
+
+        FlightList(
+            modifier = Modifier.fillMaxSize(),
+            airportName = "YYZ",
+            flights = flights
+        )
+    }
+}
+
+@Composable
+fun FlightList(
+    modifier: Modifier = Modifier,
+    airportName: String,
+    flights: List<Flight>
+) {
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.padding(
+                start = dimensionResource(R.dimen.main_container_padding),
+                bottom = dimensionResource(R.dimen.main_container_title_text_padding_bottom)
+            ),
+            text = stringResource(R.string.flights_from_text, airportName),
+            style = MaterialTheme.typography.titleSmall
+        )
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(
+                dimensionResource(R.dimen.list_item_vertical_arrangement_space)
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(
+                horizontal = dimensionResource(R.dimen.main_container_padding),
+                vertical = dimensionResource(R.dimen.main_container_padding)
+            )
+        ) {
+            items(flights, key = { flight -> flight.destinationAirport.id }) { flight ->
+                FlightListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    departureCode = flight.departureAirport.code,
+                    departureName = flight.departureAirport.name,
+                    destinationCode = flight.destinationAirport.code,
+                    destinationName = flight.destinationAirport.name,
+                    imageIcon = Icons.TwoTone.Star,
+                    imageIconClick = {}
+                )
+            }
+        }
+
+    }
+}
+
 @Composable
 fun FavoriteFlights(
     modifier: Modifier = Modifier,
     favorites: List<Favorite>
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         if (favorites.isNotEmpty()) {
             Text(
                 modifier = Modifier.padding(
-                    start = dimensionResource(R.dimen.main_container_padding)
+                    start = dimensionResource(R.dimen.main_container_padding),
+                    bottom = dimensionResource(R.dimen.main_container_title_text_padding_bottom)
                 ),
                 text = stringResource(R.string.favorites_route_text),
                 style = MaterialTheme.typography.titleSmall
@@ -61,7 +124,7 @@ fun FavoriteFlights(
             FavoriteFlightList(
                 modifier = Modifier.fillMaxWidth(),
                 favorites = favorites,
-                paddingValues = PaddingValues(
+                contentPadding = PaddingValues(
                     horizontal = dimensionResource(R.dimen.main_container_padding),
                     vertical = dimensionResource(R.dimen.main_container_padding)
                 )
@@ -80,11 +143,11 @@ fun FavoriteFlights(
 fun FavoriteFlightList(
     modifier: Modifier = Modifier,
     favorites: List<Favorite>,
-    paddingValues: PaddingValues,
+    contentPadding: PaddingValues,
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = paddingValues,
+        contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.list_item_vertical_arrangement_space)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
