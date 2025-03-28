@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AirHop</string>
+    <string name="top_bar_text">Flight Search</string>
 
     <string name="search_icon">Search Icon</string>
     <string name="search_mic">Search Microphone</string>
@@ -7,6 +8,7 @@
     <string name="flights_from_text">Flights from %s</string>
     <string name="favorites_route_text">Favorite routes</string>
     <string name="favorite_icon">Favorite Icon</string>
+    <string name="favorites_empty_text">No favorites to show! \nSearch for flights and click star icon to add.</string>
 
     <string name="depart">Depart</string>
     <string name="arrive">Arrive</string>

@@ -3,6 +3,7 @@ package com.example.airhop.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,18 +27,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.airhop.R
+import com.example.airhop.data.Airport
 
 @Preview(showBackground = true, name = "Search Bar")
 @Composable
 fun PreviewSearchBar() {
-    SearchBarAndSuggestionContainer(
+    SearchBox(
         modifier = Modifier
             .fillMaxWidth()
             .padding(24.dp),
         text = "",
         onTextValueChange = {},
         isExpanded = false,
-        airports = List(9) { Pair("$it", "Text") },
+        airports = List(9) {
+            Airport(
+                id = it,
+                code = "YYZ",
+                name = "Toronto Pearson",
+                annualPassengerVisits = 50_000
+            )
+        },
         onExpandedValueChange = {}
     )
 }
@@ -45,14 +54,21 @@ fun PreviewSearchBar() {
 @Preview(showBackground = true, name = "Search Bar Expanded")
 @Composable
 fun PreviewSearchContainer() {
-    SearchBarAndSuggestionContainer(
+    SearchBox(
         modifier = Modifier
             .fillMaxWidth()
             .padding(24.dp),
         text = "",
         onTextValueChange = {},
         isExpanded = true,
-        airports = List(9) { Pair("$it", "Text") },
+        airports = List(9) {
+            Airport(
+                id = it,
+                code = "YYZ",
+                name = "Toronto Pearson",
+                annualPassengerVisits = 50_000
+            )
+        },
         onExpandedValueChange = {}
     )
 }
@@ -60,13 +76,13 @@ fun PreviewSearchContainer() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarAndSuggestionContainer(
+fun SearchBox(
     modifier: Modifier = Modifier,
     text: String,
     onTextValueChange: (String) -> Unit,
     isExpanded: Boolean,
     onExpandedValueChange: (Boolean) -> Unit,
-    airports: List<Pair<String, String>>
+    airports: List<Airport>
 ) {
     SearchBar(
         modifier = modifier,
@@ -105,7 +121,7 @@ fun SearchBarAndSuggestionContainer(
         ),
         tonalElevation = dimensionResource(R.dimen.search_bar_tonal_elevation),
         shadowElevation = dimensionResource(R.dimen.search_bar_shadow_elevation),
-        windowInsets = SearchBarDefaults.windowInsets,
+        windowInsets = WindowInsets(top = dimensionResource(R.dimen.search_bar_top_window_inset)),
         content = {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -116,13 +132,12 @@ fun SearchBarAndSuggestionContainer(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.search_bar_suggestion_container_vertical_arrangement_space)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(airports, key = { airport -> airport.first }) { airport ->
+                items(airports, key = { airport -> airport.id }) { airport ->
                     SuggestionListItem(
                         modifier = Modifier.fillMaxWidth(),
-                        airportCode = airport.first,
-                        airportName = airport.second
+                        airportCode = airport.code,
+                        airportName = airport.name
                     )
-
                 }
             }
         }

@@ -3,6 +3,7 @@
     <!-- Search Field and Suggestion Container-->
     <dimen name="search_bar_tonal_elevation">20dp</dimen>
     <dimen name="search_bar_shadow_elevation">4dp</dimen>
+    <dimen name="search_bar_top_window_inset">0dp</dimen>
     <dimen name="search_bar_suggestion_container_vertical_arrangement_space">16dp</dimen>
     <dimen name="search_bar_suggestion_container_vertical_padding">16dp</dimen>
     <dimen name="search_bar_suggestion_container_horizontal_padding">16dp</dimen>
@@ -22,10 +23,8 @@
     <dimen name="list_item_card_border_stroke">1dp</dimen>
     <dimen name="list_item_card_favorite_button_size">28dp</dimen>
 
-    <!-- List Container -->
-    <dimen name="list_container_padding_start">16dp</dimen>
-    <dimen name="list_container_padding_top">16dp</dimen>
-    <dimen name="list_container_padding_end">16dp</dimen>
-    <dimen name="list_container_vertical_arrangement_space">12dp</dimen>
+    <!-- Main Screen -->
+    <dimen name="main_container_padding">16dp</dimen>
+    <dimen name="main_container_vertical_arrangement_space">16dp</dimen>
 
 </resources>
