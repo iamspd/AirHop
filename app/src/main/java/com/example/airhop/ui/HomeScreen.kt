@@ -77,7 +77,7 @@ fun AirHopApp() {
             )
 
 
-            FavoriteContent(
+            FavoriteFlights(
                 modifier = Modifier.fillMaxWidth(),
                 favorites = favoriteUiState.favorites
             )

@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.airhop.R
 import com.example.airhop.data.Favorite
 import com.example.airhop.ui.components.FlightListItem
@@ -32,13 +31,11 @@ fun PreviewFavoriteContent() {
             Favorite(
                 id = it,
                 departureCode = "YYZ",
-                //departureName = "Toronto Pearson",
-                destinationCode = "AMS",
-                //destinationName = "Amsterdam Airport Schiphol"
+                destinationCode = "AMS"
             )
         }
 
-        FavoriteContent(
+        FavoriteFlights(
             modifier = Modifier.fillMaxSize(),
             favorites = favorites
         )
@@ -46,7 +43,7 @@ fun PreviewFavoriteContent() {
 }
 
 @Composable
-fun FavoriteContent(
+fun FavoriteFlights(
     modifier: Modifier = Modifier,
     favorites: List<Favorite>
 ) {
@@ -83,7 +80,7 @@ fun FavoriteContent(
 fun FavoriteFlightList(
     modifier: Modifier = Modifier,
     favorites: List<Favorite>,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
+    paddingValues: PaddingValues,
 ) {
     LazyColumn(
         modifier = modifier,
