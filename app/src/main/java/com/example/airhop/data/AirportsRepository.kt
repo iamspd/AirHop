@@ -7,5 +7,7 @@ import kotlinx.coroutines.flow.Flow
  * IATA code or airport name.
  */
 interface AirportsRepository {
-    fun getFlightsStream(query: String): Flow<List<Airport>>
+    fun getAirportsStream(query: String): Flow<List<Airport>>
+
+    fun getAllAirportsStream(): Flow<List<Airport>>
 }

@@ -21,5 +21,8 @@ interface AirportDao {
 OR iata_code LIKE '%' || :query || '%'
     """
     )
-    fun getFlights(query: String): Flow<List<Airport>>
+    fun getAirports(query: String): Flow<List<Airport>>
+
+    @Query("SELECT * FROM airport")
+    fun getAllAirports(): Flow<List<Airport>>
 }
