@@ -1,6 +1,7 @@
 package com.example.airhop.ui
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +13,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.airhop.AppViewModelProvider
@@ -42,6 +45,7 @@ fun AirHopApp() {
         val searchBarState by homeViewModel.searchBarState.collectAsState()
         val selectedAirport by homeViewModel.selectedAirport.collectAsState()
         val flights by homeViewModel.searchFlights().collectAsState(initial = emptyList())
+        val context = LocalContext.current
 
         Column(
             modifier = Modifier.padding(innerPadding),
@@ -62,10 +66,11 @@ fun AirHopApp() {
                     homeViewModel.updateExpandedState(isExpanded = false)
                 },
                 onSearchActionClick = {
-                    Log.e(
-                        "TAG",
-                        flights.toString()
-                    )
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.search_bar_action_toast),
+                        Toast.LENGTH_LONG
+                    ).show()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
