@@ -1,5 +1,6 @@
 package com.example.airhop.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,9 @@ fun AirHopApp() {
         val favoriteUiState by homeViewModel.favoriteUiState.collectAsState()
         val airports by homeViewModel.airportList.collectAsState()
         val searchQuery by homeViewModel.searchQuery.collectAsState()
+        val searchBarState by homeViewModel.searchBarState.collectAsState()
+        val selectedAirport by homeViewModel.selectedAirport.collectAsState()
+        val flights by homeViewModel.searchFlights().collectAsState(initial = emptyList())
 
         Column(
             modifier = Modifier.padding(innerPadding),
@@ -48,10 +52,21 @@ fun AirHopApp() {
         ) {
             SearchBox(
                 text = searchQuery,
-                onTextValueChange = { homeViewModel.updateQueryString(it) },
-                isExpanded = true,
-                onExpandedValueChange = {},
+                onTextValueChange = { homeViewModel.updateQueryString(query = it) },
+                isExpanded = searchBarState,
+                onExpandedValueChange = { homeViewModel.updateExpandedState(it) },
                 airports = airports,
+                onSearchItemClick = {
+                    homeViewModel.updateQueryString(query = it.code)
+                    homeViewModel.getSelectedAirport(airport = it)
+                    homeViewModel.updateExpandedState(isExpanded = false)
+                },
+                onSearchActionClick = {
+                    Log.e(
+                        "TAG",
+                        flights.toString()
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(

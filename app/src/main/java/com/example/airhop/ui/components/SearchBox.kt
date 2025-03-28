@@ -1,5 +1,6 @@
 package com.example.airhop.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -47,7 +48,9 @@ fun PreviewSearchBar() {
                 annualPassengerVisits = 50_000
             )
         },
-        onExpandedValueChange = {}
+        onExpandedValueChange = {},
+        onSearchItemClick = {},
+        onSearchActionClick = {}
     )
 }
 
@@ -69,7 +72,9 @@ fun PreviewSearchContainer() {
                 annualPassengerVisits = 50_000
             )
         },
-        onExpandedValueChange = {}
+        onExpandedValueChange = {},
+        onSearchItemClick = {},
+        onSearchActionClick = {}
     )
 }
 
@@ -82,7 +87,9 @@ fun SearchBox(
     onTextValueChange: (String) -> Unit,
     isExpanded: Boolean,
     onExpandedValueChange: (Boolean) -> Unit,
-    airports: List<Airport>
+    airports: List<Airport>,
+    onSearchItemClick: (Airport) -> Unit,
+    onSearchActionClick: (String) -> Unit
 ) {
     SearchBar(
         modifier = modifier,
@@ -90,7 +97,7 @@ fun SearchBox(
             SearchBarDefaults.InputField(
                 query = text,
                 onQueryChange = { onTextValueChange(it) },
-                onSearch = { onTextValueChange(it) },
+                onSearch = { onSearchActionClick(it) },
                 enabled = true,
                 placeholder = { Text(stringResource(R.string.search_airport_text)) },
                 leadingIcon = {
@@ -134,7 +141,9 @@ fun SearchBox(
             ) {
                 items(airports, key = { airport -> airport.id }) { airport ->
                     SuggestionListItem(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSearchItemClick(airport) },
                         airportCode = airport.code,
                         airportName = airport.name
                     )
