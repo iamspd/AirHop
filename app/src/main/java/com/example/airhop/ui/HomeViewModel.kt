@@ -19,9 +19,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    favoritesRepository: FavoritesRepository,
+    private val favoritesRepository: FavoritesRepository,
     private val airportsRepository: AirportsRepository
 ) : ViewModel() {
     companion object {
@@ -105,6 +106,29 @@ class HomeViewModel(
                     )
                 }
             flights
+        }
+    }
+
+    /**
+     * Insert into [Favorite] entity.
+     */
+    fun addToFavorite(flight: Flight) {
+        viewModelScope.launch {
+            favoritesRepository.insertFlight(
+                Favorite(
+                    departureCode = flight.departureAirport.code,
+                    destinationCode = flight.destinationAirport.code
+                )
+            )
+        }
+    }
+
+    /**
+     * Delete from [Favorite] entity.
+     */
+    fun removeFavorite(favorite: Favorite) {
+        viewModelScope.launch {
+            favoritesRepository.deleteFlight(favorite)
         }
     }
 }

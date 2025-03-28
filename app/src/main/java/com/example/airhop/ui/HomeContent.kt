@@ -40,7 +40,8 @@ fun PreviewFavoriteFlights() {
 
         FavoriteFlights(
             modifier = Modifier.fillMaxSize(),
-            favorites = favorites
+            favorites = favorites,
+            onFavoriteClick = {}
         )
     }
 }
@@ -60,7 +61,8 @@ fun PreviewFlightList() {
         FlightList(
             modifier = Modifier.fillMaxSize(),
             airportName = "YYZ",
-            flights = flights
+            flights = flights,
+            onFavoriteClick = {}
         )
     }
 }
@@ -69,7 +71,8 @@ fun PreviewFlightList() {
 fun FlightList(
     modifier: Modifier = Modifier,
     airportName: String,
-    flights: List<Flight>
+    flights: List<Flight>,
+    onFavoriteClick: (Flight) -> Unit
 ) {
     Column(modifier = modifier) {
         Text(
@@ -98,7 +101,7 @@ fun FlightList(
                     destinationCode = flight.destinationAirport.code,
                     destinationName = flight.destinationAirport.name,
                     imageIcon = Icons.TwoTone.Star,
-                    imageIconClick = {}
+                    imageIconClick = { onFavoriteClick(flight) }
                 )
             }
         }
@@ -109,7 +112,8 @@ fun FlightList(
 @Composable
 fun FavoriteFlights(
     modifier: Modifier = Modifier,
-    favorites: List<Favorite>
+    favorites: List<Favorite>,
+    onFavoriteClick: (Favorite) -> Unit
 ) {
     Column(modifier = modifier) {
         if (favorites.isNotEmpty()) {
@@ -124,6 +128,7 @@ fun FavoriteFlights(
             FavoriteFlightList(
                 modifier = Modifier.fillMaxWidth(),
                 favorites = favorites,
+                onFavoriteClick = onFavoriteClick,
                 contentPadding = PaddingValues(
                     horizontal = dimensionResource(R.dimen.main_container_padding),
                     vertical = dimensionResource(R.dimen.main_container_padding)
@@ -144,6 +149,7 @@ fun FavoriteFlightList(
     modifier: Modifier = Modifier,
     favorites: List<Favorite>,
     contentPadding: PaddingValues,
+    onFavoriteClick: (Favorite) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -156,7 +162,7 @@ fun FavoriteFlightList(
                 modifier = Modifier.fillMaxWidth(),
                 departureCode = favorite.departureCode,
                 destinationCode = favorite.destinationCode,
-                imageIconClick = {},
+                imageIconClick = { onFavoriteClick(favorite) },
                 imageIcon = Icons.Default.Star,
                 departureName = "",
                 destinationName = ""

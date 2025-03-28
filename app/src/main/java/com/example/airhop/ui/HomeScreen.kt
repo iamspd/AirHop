@@ -81,13 +81,15 @@ fun AirHopApp() {
             if (searchQuery.isBlank()) {
                 FavoriteFlights(
                     modifier = Modifier.fillMaxWidth(),
-                    favorites = favoriteUiState.favorites
+                    favorites = favoriteUiState.favorites,
+                    onFavoriteClick = { homeViewModel.removeFavorite(favorite = it) }
                 )
             } else {
                 FlightList(
                     modifier = Modifier.fillMaxWidth(),
                     airportName = searchQuery,
-                    flights = flights
+                    flights = flights,
+                    onFavoriteClick = { homeViewModel.addToFavorite(flight = it) }
                 )
             }
         }
