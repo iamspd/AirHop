@@ -48,7 +48,7 @@ class HomeViewModel(
     }
 
     /**
-     * Create airport list based on search query in the [SearchBar] composable.
+     * Create airport list based on search query in the Search Bar composable.
      */
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val airportList: StateFlow<List<Airport>> =
