@@ -90,7 +90,7 @@ class HomeViewModel(
     }
 
     /**
-     * Create flight list by pairing [_selectedAirport]
+     * A flight list by pairing [_selectedAirport]
      * with rest of the airports in the list.
      */
     fun searchFlights(): Flow<List<Flight>> {
@@ -110,7 +110,7 @@ class HomeViewModel(
     }
 
     /**
-     * Insert into [Favorite] entity.
+     * Inserting data into [Favorite] entity.
      */
     fun addToFavorite(flight: Flight) {
         viewModelScope.launch {
@@ -124,7 +124,7 @@ class HomeViewModel(
     }
 
     /**
-     * Delete from [Favorite] entity.
+     * Deleting from [Favorite] entity.
      */
     fun removeFavorite(favorite: Favorite) {
         viewModelScope.launch {
