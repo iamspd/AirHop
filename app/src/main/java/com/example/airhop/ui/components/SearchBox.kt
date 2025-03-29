@@ -1,26 +1,43 @@
 package com.example.airhop.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.airhop.R
 import com.example.airhop.data.Airport
+import com.example.airhop.ui.theme.Shapes
 
 @Preview(showBackground = true, name = "Search Bar")
 @Composable
@@ -50,7 +68,8 @@ fun PreviewSearchBar() {
         },
         onExpandedValueChange = {},
         onSearchItemClick = {},
-        onSearchActionClick = {}
+        onSearchActionClick = {},
+        onTrailingIconAction = {}
     )
 }
 
@@ -74,10 +93,10 @@ fun PreviewSearchContainer() {
         },
         onExpandedValueChange = {},
         onSearchItemClick = {},
-        onSearchActionClick = {}
+        onSearchActionClick = {},
+        onTrailingIconAction = {}
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,70 +106,83 @@ fun SearchBox(
     onTextValueChange: (String) -> Unit,
     isExpanded: Boolean,
     onExpandedValueChange: (Boolean) -> Unit,
+    onTrailingIconAction: () -> Unit,
     airports: List<Airport>,
     onSearchItemClick: (Airport) -> Unit,
     onSearchActionClick: (String) -> Unit
 ) {
-    SearchBar(
+    Card(
+        shape = Shapes.medium,
         modifier = modifier,
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = text,
-                onQueryChange = { onTextValueChange(it) },
-                onSearch = { onSearchActionClick(it) },
-                enabled = true,
-                placeholder = { Text(stringResource(R.string.search_airport_text)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(R.string.search_icon)
-                    )
-                },
-                trailingIcon = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        SearchBar(
+            modifier = Modifier.fillMaxWidth(),
+            shape = SearchBarDefaults.inputFieldShape,
+            inputField = {
+                SearchBarDefaults.InputField(
+                    modifier = Modifier.clip(Shapes.medium),
+                    query = text,
+                    onQueryChange = { onTextValueChange(it) },
+                    onSearch = { onSearchActionClick(it) },
+                    enabled = true,
+                    placeholder = { Text(stringResource(R.string.search_airport_text)) },
+                    leadingIcon = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_mic),
-                            contentDescription = stringResource(R.string.search_mic)
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(R.string.search_icon)
+                        )
+                    },
+                    trailingIcon = {
+                        if (isExpanded) {
+                            IconButton(
+                                onClick = { onTrailingIconAction() }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(R.string.search_bar_close_icon)
+                                )
+                            }
+                        }
+                    },
+                    expanded = isExpanded,
+                    onExpandedChange = { onExpandedValueChange(it) }
+                )
+            },
+            expanded = isExpanded,
+            onExpandedChange = { onExpandedValueChange(it) },
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            tonalElevation = dimensionResource(R.dimen.search_bar_tonal_elevation),
+            windowInsets = WindowInsets(dimensionResource(R.dimen.search_bar_top_window_inset)),
+            content = {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(
+                        vertical = dimensionResource(R.dimen.search_bar_suggestion_container_vertical_padding),
+                        horizontal = dimensionResource(R.dimen.search_bar_suggestion_container_horizontal_padding)
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(
+                        dimensionResource(R.dimen.search_bar_suggestion_container_vertical_arrangement_space)
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(airports, key = { airport -> airport.id }) { airport ->
+                        SuggestionListItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSearchItemClick(airport) },
+                            airportCode = airport.code,
+                            airportName = airport.name
                         )
                     }
-                },
-                expanded = isExpanded,
-                onExpandedChange = { onExpandedValueChange(it) }
-            )
-        },
-        expanded = isExpanded,
-        shape = SearchBarDefaults.inputFieldShape,
-        onExpandedChange = { onExpandedValueChange(it) },
-        colors = SearchBarDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        tonalElevation = dimensionResource(R.dimen.search_bar_tonal_elevation),
-        shadowElevation = dimensionResource(R.dimen.search_bar_shadow_elevation),
-        windowInsets = WindowInsets(top = dimensionResource(R.dimen.search_bar_top_window_inset)),
-        content = {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(
-                    vertical = dimensionResource(R.dimen.search_bar_suggestion_container_vertical_padding),
-                    horizontal = dimensionResource(R.dimen.search_bar_suggestion_container_horizontal_padding)
-                ),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.search_bar_suggestion_container_vertical_arrangement_space)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(airports, key = { airport -> airport.id }) { airport ->
-                    SuggestionListItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onSearchItemClick(airport) },
-                        airportCode = airport.code,
-                        airportName = airport.name
-                    )
                 }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable

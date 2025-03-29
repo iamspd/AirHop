@@ -57,6 +57,13 @@ fun AirHopApp() {
                 onTextValueChange = { homeViewModel.updateQueryString(query = it) },
                 isExpanded = searchBarState,
                 onExpandedValueChange = { homeViewModel.updateExpandedState(it) },
+                onTrailingIconAction = {
+                    if (searchQuery.isNotBlank()) {
+                        homeViewModel.updateQueryString(query = "")
+                    } else {
+                        homeViewModel.updateExpandedState(isExpanded = false)
+                    }
+                },
                 airports = airports,
                 onSearchItemClick = {
                     homeViewModel.updateQueryString(query = it.code)

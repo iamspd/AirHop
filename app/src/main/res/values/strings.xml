@@ -3,7 +3,7 @@
     <string name="top_bar_text">Flight Search</string>
 
     <string name="search_icon">Search Icon</string>
-    <string name="search_mic">Search Microphone</string>
+    <string name="search_bar_close_icon">Close Icon</string>
     <string name="search_airport_text">Enter departure airport</string>
     <string name="search_bar_action_toast">Please select from search results to see available flights.</string>
     <string name="flights_from_text">Flights from %s</string>
