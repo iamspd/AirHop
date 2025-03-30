@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.airhop.data.Airport
 import com.example.airhop.data.AirportsRepository
-import com.example.airhop.data.Favorite
-import com.example.airhop.data.FavoritesRepository
 import com.example.airhop.data.Flight
+import com.example.airhop.data.PreferenceRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,30 +22,41 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val favoritesRepository: FavoritesRepository,
-    private val airportsRepository: AirportsRepository
+    private val airportsRepository: AirportsRepository,
+    private val userPreferencesRepository: PreferenceRepository
 ) : ViewModel() {
     companion object {
-        private const val SUBSCRIBER_TIMEOUT_MILLIS = 5_000L
-        private const val DEBOUNCE_TIMEOUT_MILLIS = 300L
+        const val SUBSCRIBER_TIMEOUT_MILLIS = 5_000L
+        private const val DEBOUNCE_TIMEOUT_MILLIS = 500L
     }
-
-    /**
-     * Emit favorite flights from the repository.
-     */
-    val favoriteUiState: StateFlow<FavoriteUiState> =
-        favoritesRepository.getFavoriteFlights().map { FavoriteUiState(it) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(SUBSCRIBER_TIMEOUT_MILLIS),
-                initialValue = FavoriteUiState()
-            )
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     fun updateQueryString(query: String) {
         _searchQuery.value = query
+
+        /** Adding a delay before updating the [_searchQuery] so that DataStore
+         * does not keep writing at every key-stroke.
+         **/
+        viewModelScope.launch {
+            delay(SUBSCRIBER_TIMEOUT_MILLIS)
+            userPreferencesRepository.saveSearchQuery(query)
+        }
+    }
+
+    /**
+     * Check if the DataStore Preferences has the savedQuery on the start.
+     */
+    init {
+        viewModelScope.launch {
+            userPreferencesRepository.getSearchQueryPref().collect { savedQuery ->
+                if (_searchQuery.value.isBlank()) {
+                    _searchQuery.value = savedQuery
+                }
+            }
+
+        }
     }
 
     /**
@@ -75,18 +86,16 @@ class HomeViewModel(
     private val _searchBarState = MutableStateFlow(value = false)
     val searchBarState: StateFlow<Boolean> = _searchBarState.asStateFlow()
 
-    fun updateExpandedState(isExpanded: Boolean) {
+    fun updateSearchBarState(isExpanded: Boolean) {
         _searchBarState.value = isExpanded
     }
 
     /**
      * Current selected airport from the SearchBar content composable.
      */
-    private val _selectedAirport = MutableStateFlow(value = Airport())
-    val selectedAirport: StateFlow<Airport> = _selectedAirport.asStateFlow()
-
-    fun getSelectedAirport(airport: Airport) {
-        _selectedAirport.value = airport
+    private val _departureAirport = MutableStateFlow(value = Airport())
+    fun getDepartureAirport(airport: Airport) {
+        _departureAirport.value = airport
     }
 
     /**
@@ -96,12 +105,12 @@ class HomeViewModel(
     fun searchFlights(): Flow<List<Flight>> {
         return airportsRepository.getAllAirportsStream().map { airports ->
             val flights = mutableListOf<Flight>()
-            airports.filter { departure -> departure.code != _selectedAirport.value.code }
-                .forEach { destination ->
+            airports.filter { airport -> airport.code != _departureAirport.value.code }
+                .forEach { destinationAirport ->
                     flights.add(
                         Flight(
-                            departureAirport = _selectedAirport.value,
-                            destinationAirport = destination
+                            departureAirport = _departureAirport.value,
+                            destinationAirport = destinationAirport
                         )
                     )
                 }
@@ -109,31 +118,10 @@ class HomeViewModel(
         }
     }
 
-    /**
-     * Inserting data into [Favorite] entity.
-     */
-    fun addToFavorite(flight: Flight) {
-        viewModelScope.launch {
-            favoritesRepository.insertFlight(
-                Favorite(
-                    departureCode = flight.departureAirport.code,
-                    destinationCode = flight.destinationAirport.code
-                )
-            )
-        }
-    }
+    private val _homeScreenUiState = MutableStateFlow(value = true)
+    val homeScreenUiState: StateFlow<Boolean> = _homeScreenUiState.asStateFlow()
 
-    /**
-     * Deleting from [Favorite] entity.
-     */
-    fun removeFavorite(favorite: Favorite) {
-        viewModelScope.launch {
-            favoritesRepository.deleteFlight(favorite)
-        }
+    fun updateHomeScreenUiState(state: Boolean) {
+        _homeScreenUiState.value = state
     }
 }
-
-/**
- * UI state of Favorite List.
- */
-data class FavoriteUiState(val favorites: List<Favorite> = listOf())

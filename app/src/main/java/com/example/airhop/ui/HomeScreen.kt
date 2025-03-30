@@ -1,6 +1,5 @@
 package com.example.airhop.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,26 +7,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.airhop.AppViewModelProvider
 import com.example.airhop.R
 import com.example.airhop.ui.components.AirHopTopBar
 import com.example.airhop.ui.components.SearchBox
-import com.example.airhop.ui.theme.AirHopTheme
-
-@Preview
-@Composable
-fun PreviewHomeScreen() {
-    AirHopTheme {
-    }
-}
 
 @Composable
 fun AirHopApp() {
@@ -37,13 +30,25 @@ fun AirHopApp() {
     ) { innerPadding ->
 
         val homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
-        val favoriteUiState by homeViewModel.favoriteUiState.collectAsState()
         val airports by homeViewModel.airportList.collectAsState()
-        val searchQuery by homeViewModel.searchQuery.collectAsState()
+
         val searchBarState by homeViewModel.searchBarState.collectAsState()
-        val selectedAirport by homeViewModel.selectedAirport.collectAsState()
         val flights by homeViewModel.searchFlights().collectAsState(initial = emptyList())
-        val context = LocalContext.current
+        val homeScreenUiState by homeViewModel.homeScreenUiState.collectAsState()
+
+        val searchQuery by homeViewModel.searchQuery.collectAsState()
+        var localQuery by rememberSaveable { mutableStateOf("") }
+
+        val favoriteViewModel: FavoriteViewModel = viewModel(factory = AppViewModelProvider.Factory)
+        val favoriteUiState by favoriteViewModel.favoriteUiState.collectAsState()
+        /**
+         * Set the saved value of searchQuery to localQuery if Preference has it.
+         */
+        LaunchedEffect(searchQuery) {
+            if (localQuery.isBlank()) {
+                localQuery = searchQuery
+            }
+        }
 
         Column(
             modifier = Modifier.padding(innerPadding),
@@ -53,29 +58,35 @@ fun AirHopApp() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchBox(
-                text = searchQuery,
-                onTextValueChange = { homeViewModel.updateQueryString(query = it) },
+                text = localQuery,
+                onTextValueChange = {
+                    localQuery = it
+                    homeViewModel.updateQueryString(it)
+                },
                 isExpanded = searchBarState,
-                onExpandedValueChange = { homeViewModel.updateExpandedState(it) },
+                onExpandedValueChange = homeViewModel::updateSearchBarState,
                 onTrailingIconAction = {
-                    if (searchQuery.isNotBlank()) {
-                        homeViewModel.updateQueryString(query = "")
+                    if (localQuery.isBlank()) {
+                        homeViewModel.updateSearchBarState(isExpanded = false)
                     } else {
-                        homeViewModel.updateExpandedState(isExpanded = false)
+                        localQuery = ""
+                        homeViewModel.updateQueryString(query = "")
                     }
                 },
                 airports = airports,
                 onSearchItemClick = {
+                    localQuery = it.code
                     homeViewModel.updateQueryString(query = it.code)
-                    homeViewModel.getSelectedAirport(airport = it)
-                    homeViewModel.updateExpandedState(isExpanded = false)
+                    homeViewModel.getDepartureAirport(airport = it)
+                    homeViewModel.updateSearchBarState(isExpanded = false)
+                    homeViewModel.updateHomeScreenUiState(state = false)
                 },
                 onSearchActionClick = {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.search_bar_action_toast),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    localQuery = airports.first().code
+                    homeViewModel.updateQueryString(query = airports.first().code)
+                    homeViewModel.getDepartureAirport(airport = airports.first())
+                    homeViewModel.updateSearchBarState(isExpanded = false)
+                    homeViewModel.updateHomeScreenUiState(state = false)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -85,18 +96,23 @@ fun AirHopApp() {
                         end = dimensionResource(R.dimen.main_container_padding)
                     )
             )
-            if (searchQuery.isBlank()) {
+
+            if (localQuery.isBlank()) {
+                homeViewModel.updateHomeScreenUiState(state = true)
+            }
+
+            if (homeScreenUiState.not() && localQuery.isNotBlank()) {
+                FlightList(
+                    modifier = Modifier.fillMaxWidth(),
+                    airportName = localQuery,
+                    flights = flights,
+                    onFavoriteClick = favoriteViewModel::addToFavorite
+                )
+            } else {
                 FavoriteFlights(
                     modifier = Modifier.fillMaxWidth(),
                     favorites = favoriteUiState.favorites,
-                    onFavoriteClick = { homeViewModel.removeFavorite(favorite = it) }
-                )
-            } else {
-                FlightList(
-                    modifier = Modifier.fillMaxWidth(),
-                    airportName = searchQuery,
-                    flights = flights,
-                    onFavoriteClick = { homeViewModel.addToFavorite(flight = it) }
+                    onFavoriteClick = favoriteViewModel::removeFavorite
                 )
             }
         }

@@ -6,13 +6,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.airhop.ui.HomeViewModel
 import android.app.Application
+import com.example.airhop.ui.FavoriteViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             HomeViewModel(
-                airHopApplication().appContainer.favoritesRepository,
-                airHopApplication().appContainer.airportsRepository
+                AirHopApplication().appContainer.airportsRepository,
+                AirHopApplication().appContainer.preferenceRepository
+            )
+        }
+        initializer {
+            FavoriteViewModel(
+                AirHopApplication().appContainer.favoritesRepository
             )
         }
     }
@@ -22,5 +28,5 @@ object AppViewModelProvider {
  * Extension function that queries for [Application] object and returns an instance of
  * [AirHopApplication]
  */
-fun CreationExtras.airHopApplication(): AirHopApplication =
+fun CreationExtras.AirHopApplication(): AirHopApplication =
     this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AirHopApplication
