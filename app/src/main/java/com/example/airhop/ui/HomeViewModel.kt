@@ -99,7 +99,7 @@ class HomeViewModel(
     }
 
     /**
-     * A flight list by pairing [_selectedAirport]
+     * A flight list by pairing [_departureAirport]
      * with rest of the airports in the list.
      */
     fun searchFlights(): Flow<List<Flight>> {
