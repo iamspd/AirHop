@@ -1,5 +1,8 @@
-package com.example.airhop.data
+package com.example.airhop.data.repositoryImpl
 
+import com.example.airhop.data.FavoriteDao
+import com.example.airhop.data.model.Favorite
+import com.example.airhop.data.repository.FavoritesRepository
 import kotlinx.coroutines.flow.Flow
 
 class OfflineFavoritesRepository(

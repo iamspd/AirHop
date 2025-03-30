@@ -20,9 +20,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.airhop.R
-import com.example.airhop.data.Airport
-import com.example.airhop.data.Favorite
-import com.example.airhop.data.Flight
+import com.example.airhop.data.model.Airport
+import com.example.airhop.data.model.Favorite
+import com.example.airhop.data.model.Flight
 import com.example.airhop.ui.components.FlightListItem
 import com.example.airhop.ui.theme.AirHopTheme
 

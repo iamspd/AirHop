@@ -1,6 +1,7 @@
 package com.example.airhop.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.airhop.R
-import com.example.airhop.data.Airport
+import com.example.airhop.data.model.Airport
 import com.example.airhop.ui.theme.Shapes
 
 @Preview(showBackground = true, name = "Search Bar")
@@ -160,7 +162,11 @@ fun SearchBox(
                         SuggestionListItem(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { onSearchItemClick(airport) },
+                                .clickable(
+                                    onClick = { onSearchItemClick(airport) },
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ),
                             airportCode = airport.code,
                             airportName = airport.name
                         )

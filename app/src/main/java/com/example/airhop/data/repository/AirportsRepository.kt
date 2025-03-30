@@ -1,5 +1,6 @@
-package com.example.airhop.data
+package com.example.airhop.data.repository
 
+import com.example.airhop.data.model.Airport
 import kotlinx.coroutines.flow.Flow
 
 /**

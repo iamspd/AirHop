@@ -1,4 +1,4 @@
-package com.example.airhop.data
+package com.example.airhop.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

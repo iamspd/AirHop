@@ -1,5 +1,8 @@
-package com.example.airhop.data
+package com.example.airhop.data.repositoryImpl
 
+import com.example.airhop.data.AirportDao
+import com.example.airhop.data.model.Airport
+import com.example.airhop.data.repository.AirportsRepository
 import kotlinx.coroutines.flow.Flow
 
 class OfflineAirportsRepository(

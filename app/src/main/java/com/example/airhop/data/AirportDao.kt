@@ -2,6 +2,7 @@ package com.example.airhop.data
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.example.airhop.data.model.Airport
 import kotlinx.coroutines.flow.Flow
 
 /**

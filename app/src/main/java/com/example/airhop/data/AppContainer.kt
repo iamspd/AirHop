@@ -3,6 +3,12 @@ package com.example.airhop.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.example.airhop.data.repository.AirportsRepository
+import com.example.airhop.data.repository.FavoritesRepository
+import com.example.airhop.data.repository.PreferenceRepository
+import com.example.airhop.data.repositoryImpl.OfflineAirportsRepository
+import com.example.airhop.data.repositoryImpl.OfflineFavoritesRepository
+import com.example.airhop.data.repositoryImpl.UserPreferencesRepository
 
 /**
  * App container for dependency injection.

@@ -1,11 +1,11 @@
-package com.example.airhop.ui
+package com.example.airhop.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.airhop.data.Airport
-import com.example.airhop.data.AirportsRepository
-import com.example.airhop.data.Flight
-import com.example.airhop.data.PreferenceRepository
+import com.example.airhop.data.model.Airport
+import com.example.airhop.data.repository.AirportsRepository
+import com.example.airhop.data.model.Flight
+import com.example.airhop.data.repository.PreferenceRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay

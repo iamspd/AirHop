@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.airhop.data.model.Airport
+import com.example.airhop.data.model.Favorite
 
 /**
  * Database instance class to instantiate the air_hop db.

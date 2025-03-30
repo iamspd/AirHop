@@ -1,11 +1,11 @@
-package com.example.airhop.ui
+package com.example.airhop.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.airhop.data.Favorite
-import com.example.airhop.data.FavoritesRepository
-import com.example.airhop.data.Flight
-import com.example.airhop.ui.HomeViewModel.Companion.SUBSCRIBER_TIMEOUT_MILLIS
+import com.example.airhop.data.model.Favorite
+import com.example.airhop.data.repository.FavoritesRepository
+import com.example.airhop.data.model.Flight
+import com.example.airhop.ui.viewmodel.HomeViewModel.Companion.SUBSCRIBER_TIMEOUT_MILLIS
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

@@ -1,4 +1,4 @@
-package com.example.airhop.data
+package com.example.airhop.data.model
 
 /**
  * Data class that represents flight information based on

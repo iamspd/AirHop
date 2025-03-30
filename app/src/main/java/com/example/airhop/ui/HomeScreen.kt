@@ -21,6 +21,8 @@ import com.example.airhop.AppViewModelProvider
 import com.example.airhop.R
 import com.example.airhop.ui.components.AirHopTopBar
 import com.example.airhop.ui.components.SearchBox
+import com.example.airhop.ui.viewmodel.FavoriteViewModel
+import com.example.airhop.ui.viewmodel.HomeViewModel
 
 @Composable
 fun AirHopApp() {
