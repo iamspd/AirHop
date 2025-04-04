@@ -36,9 +36,16 @@ fun AirHopApp() {
 
         val searchBarState by homeViewModel.searchBarState.collectAsState()
         val flights by homeViewModel.searchFlights().collectAsState(initial = emptyList())
-        val homeScreenUiState by homeViewModel.homeScreenUiState.collectAsState()
+        val isFavoriteFlightShowing by homeViewModel.isFavoriteFlightsShowing.collectAsState()
 
         val searchQuery by homeViewModel.searchQuery.collectAsState()
+
+        /**
+         * Adding this variable as for searchQuery, it is saving the typed query into the
+         * Data Store and when assigned to display updated Query on the search bar input field,
+         * the input field was recomposing itself too many times, skipping input alphabets from the
+         * keyboard. Hence, this solution.
+         */
         var localQuery by rememberSaveable { mutableStateOf("") }
 
         val favoriteViewModel: FavoriteViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -81,14 +88,14 @@ fun AirHopApp() {
                     homeViewModel.updateQueryString(query = it.code)
                     homeViewModel.getDepartureAirport(airport = it)
                     homeViewModel.updateSearchBarState(isExpanded = false)
-                    homeViewModel.updateHomeScreenUiState(state = false)
+                    homeViewModel.updateHomeScreenContent(state = false)
                 },
                 onSearchActionClick = {
                     localQuery = airports.first().code
                     homeViewModel.updateQueryString(query = airports.first().code)
                     homeViewModel.getDepartureAirport(airport = airports.first())
                     homeViewModel.updateSearchBarState(isExpanded = false)
-                    homeViewModel.updateHomeScreenUiState(state = false)
+                    homeViewModel.updateHomeScreenContent(state = false)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,10 +107,10 @@ fun AirHopApp() {
             )
 
             if (localQuery.isBlank()) {
-                homeViewModel.updateHomeScreenUiState(state = true)
+                homeViewModel.updateHomeScreenContent(state = true)
             }
 
-            if (homeScreenUiState.not() && localQuery.isNotBlank()) {
+            if (isFavoriteFlightShowing.not() && localQuery.isNotBlank()) {
                 FlightList(
                     modifier = Modifier.fillMaxWidth(),
                     airportName = localQuery,

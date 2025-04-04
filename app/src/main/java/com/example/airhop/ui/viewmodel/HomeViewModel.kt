@@ -118,10 +118,10 @@ class HomeViewModel(
         }
     }
 
-    private val _homeScreenUiState = MutableStateFlow(value = true)
-    val homeScreenUiState: StateFlow<Boolean> = _homeScreenUiState.asStateFlow()
+    private val _isFavoriteFlightsShowing = MutableStateFlow(value = true)
+    val isFavoriteFlightsShowing: StateFlow<Boolean> = _isFavoriteFlightsShowing.asStateFlow()
 
-    fun updateHomeScreenUiState(state: Boolean) {
-        _homeScreenUiState.value = state
+    fun updateHomeScreenContent(state: Boolean) {
+        _isFavoriteFlightsShowing.value = state
     }
 }
