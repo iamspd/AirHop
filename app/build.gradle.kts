@@ -69,4 +69,7 @@ dependencies {
 
     // Preferences Datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // Coroutine Test
+    testImplementation(libs.kotlinx.coroutines.test)
 }
