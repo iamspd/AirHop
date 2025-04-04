@@ -29,7 +29,6 @@ abstract class AirHopDatabase : RoomDatabase() {
                     name = "air_hop_database"
                 )
                     .createFromAsset(databaseFilePath = "database/air_hop.db")
-                    .fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }
             }
